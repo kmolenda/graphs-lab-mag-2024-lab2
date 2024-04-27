@@ -12,6 +12,10 @@ void Test2()
          ('C', 'D'), ('H', 'I')});
     // Console.WriteLine( g.ToDot() );
     Console.WriteLine(g.CountConnectedComponents());
+
+    foreach (var component in g.GetConnectedComponents())
+        Console.WriteLine(string.Join(", ", component));
+
 }
 
 

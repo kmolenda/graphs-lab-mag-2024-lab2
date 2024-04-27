@@ -68,5 +68,21 @@ public static class GraphAlgorithms
         return count;
     }
 
-
+    // lista składowych spójnych grafu g
+    public static IEnumerable<IEnumerable<T>> GetConnectedComponents<T>(this IGraphNonWeighted<T> g) where T : IEquatable<T>
+    {
+        var visited = new HashSet<T>();
+        foreach (var vertex in g.Vertices)
+        {
+            if (visited.Contains(vertex))
+                continue;
+            var component = new List<T>();
+            foreach (var v in g.DFS(vertex))
+            {
+                component.Add(v);
+                visited.Add(v);
+            }
+            yield return component;
+        }
+    }
 } 
