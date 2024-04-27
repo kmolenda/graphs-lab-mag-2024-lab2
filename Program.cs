@@ -16,6 +16,8 @@ void Test2()
     foreach (var component in g.GetConnectedComponents())
         Console.WriteLine(string.Join(", ", component));
 
+    foreach (var ap in g.GetArticulationPoints())
+        Console.WriteLine($"AP: {ap}");
 }
 
 

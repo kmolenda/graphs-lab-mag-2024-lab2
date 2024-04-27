@@ -85,4 +85,45 @@ public static class GraphAlgorithms
             yield return component;
         }
     }
+
+    // articulation points definicja:
+    // https://en.wikipedia.org/wiki/Biconnected_component
+    public static IEnumerable<T> GetArticulationPoints<T>(this IGraphNonWeighted<T> g) where T : IEquatable<T>
+    {
+        var visited = new HashSet<T>();
+        var parent = new Dictionary<T, T>();
+        var low = new Dictionary<T, int>();
+        var disc = new Dictionary<T, int>();
+        var ap = new HashSet<T>();
+        var time = 0;
+
+        void DFS(T u)
+        {
+            visited.Add(u);
+            disc[u] = low[u] = ++time;
+            var children = 0;
+            foreach (var v in g.Neighbours(u))
+            {
+                if (!visited.Contains(v))
+                {
+                    children++;
+                    parent[v] = u;
+                    DFS(v);
+                    low[u] = Math.Min(low[u], low[v]);
+                    if (parent[u] == null && children > 1)
+                        ap.Add(u);
+                    if (parent[u] != null && low[v] >= disc[u])
+                        ap.Add(u);
+                }
+                else if (!v.Equals(parent[u]))
+                    low[u] = Math.Min(low[u], disc[v]);
+            }
+        }
+
+        foreach (var vertex in g.Vertices)
+            if (!visited.Contains(vertex))
+                DFS(vertex);
+
+        return ap;
+    }
 } 
